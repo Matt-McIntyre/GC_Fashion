@@ -4,7 +4,7 @@ Put login info in "application.properties" file under src/main/resources:
 spring.jpa.hibernate.ddl-auto = update
 
 ## Spring DATASOURCE
-spring.datasource.url = jdbc:mysql://localhost:3306/lms?serverTimezone=America/New_York&useSSL=false
+spring.datasource.url = jdbc:mysql://localhost:3306/fashion?serverTimezone=America/New_York&useSSL=false
 spring.datasource.username = root
 spring.datasource.password = password
 
