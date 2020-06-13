@@ -10,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "category")
-public class Category implements Serializable {
+@Table(name = "subcategory")
+public class Subcategory implements Serializable {
 
 	/**
 	 * 
@@ -19,56 +19,49 @@ public class Category implements Serializable {
 	private static final long serialVersionUID = 5025050942490678068L;
 
 	@Id
-	@Column(name = "cat_id")
+	@Column(name = "subcat_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long catId;
+	private Long subcatId;
 	
-	@Column(name = "cat_name")
-	private String catName;
+	@Column(name = "subcat_name")
+	private String subcatName;
 	
-	@Column(name = "cat_desc")
+	@Column(name = "subcat_desc")
 	private String catDesc;
+	
+	@Column(name = "cat_id")
+	private Long catId;
 
-	/**
-	 * @return the catId
-	 */
-	public Long getCatId() {
-		return catId;
+	public Long getSubcatId() {
+		return subcatId;
 	}
 
-	/**
-	 * @param catId the catId to set
-	 */
-	public void setCatId(Long catId) {
-		this.catId = catId;
+	public void setSubcatId(Long subcatId) {
+		this.subcatId = subcatId;
 	}
 
-	/**
-	 * @return the catName
-	 */
-	public String getCatName() {
-		return catName;
+	public String getSubcatName() {
+		return subcatName;
 	}
 
-	/**
-	 * @param catName the catName to set
-	 */
-	public void setCatName(String catName) {
-		this.catName = catName;
+	public void setSubcatName(String subcatName) {
+		this.subcatName = subcatName;
 	}
 
-	/**
-	 * @return the catDesc
-	 */
 	public String getCatDesc() {
 		return catDesc;
 	}
 
-	/**
-	 * @param catDesc the catDesc to set
-	 */
 	public void setCatDesc(String catDesc) {
 		this.catDesc = catDesc;
+	}
+
+	public Long getCatId() {
+		return catId;
+	}
+
+	public void setCatId(Long catId) {
+		this.catId = catId;
 	}
 
 	@Override
@@ -77,7 +70,8 @@ public class Category implements Serializable {
 		int result = 1;
 		result = prime * result + ((catDesc == null) ? 0 : catDesc.hashCode());
 		result = prime * result + ((catId == null) ? 0 : catId.hashCode());
-		result = prime * result + ((catName == null) ? 0 : catName.hashCode());
+		result = prime * result + ((subcatId == null) ? 0 : subcatId.hashCode());
+		result = prime * result + ((subcatName == null) ? 0 : subcatName.hashCode());
 		return result;
 	}
 
@@ -89,7 +83,7 @@ public class Category implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Category other = (Category) obj;
+		Subcategory other = (Subcategory) obj;
 		if (catDesc == null) {
 			if (other.catDesc != null)
 				return false;
@@ -100,13 +94,19 @@ public class Category implements Serializable {
 				return false;
 		} else if (!catId.equals(other.catId))
 			return false;
-		if (catName == null) {
-			if (other.catName != null)
+		if (subcatId == null) {
+			if (other.subcatId != null)
 				return false;
-		} else if (!catName.equals(other.catName))
+		} else if (!subcatId.equals(other.subcatId))
+			return false;
+		if (subcatName == null) {
+			if (other.subcatName != null)
+				return false;
+		} else if (!subcatName.equals(other.subcatName))
 			return false;
 		return true;
 	}
+	
 
 
 }
