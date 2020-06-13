@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
@@ -51,6 +53,24 @@ public class Transaction implements Serializable {
 		joinColumns = @JoinColumn(name = "transaction_id"), 
 		inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private List<Product> products;
+	
+	@ManyToMany
+	@JoinTable(name = "transaction_coupons", 
+		joinColumns = @JoinColumn(name = "transaction_id"), 
+		inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+	private List<Coupon> coupons;
+
+	@ManyToOne
+	@MapsId("storeId")
+	@JoinColumn(name = "store_id")
+//	@JsonBackReference(value="productCategory")
+	private Store store;
+	
+	@ManyToOne
+	@MapsId("userId")
+	@JoinColumn(name = "user_id")
+//	@JsonBackReference(value="productCategory")
+	private User user;
 
 	/**
 	 * @return the transactionId
@@ -164,17 +184,62 @@ public class Transaction implements Serializable {
 		this.products = products;
 	}
 
+	/**
+	 * @return the coupons
+	 */
+	public List<Coupon> getCoupons() {
+		return coupons;
+	}
+
+	/**
+	 * @param coupons the coupons to set
+	 */
+	public void setCoupons(List<Coupon> coupons) {
+		this.coupons = coupons;
+	}
+
+	/**
+	 * @return the store
+	 */
+	public Store getStore() {
+		return store;
+	}
+
+	/**
+	 * @param store the store to set
+	 */
+	public void setStore(Store store) {
+		this.store = store;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((coupons == null) ? 0 : coupons.hashCode());
 		result = prime * result + ((paymentId == null) ? 0 : paymentId.hashCode());
 		result = prime * result + ((products == null) ? 0 : products.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((store == null) ? 0 : store.hashCode());
 		result = prime * result + ((storeId == null) ? 0 : storeId.hashCode());
 		result = prime * result + ((tax == null) ? 0 : tax.hashCode());
 		result = prime * result + ((total == null) ? 0 : total.hashCode());
 		result = prime * result + ((transactionId == null) ? 0 : transactionId.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
@@ -188,6 +253,11 @@ public class Transaction implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Transaction other = (Transaction) obj;
+		if (coupons == null) {
+			if (other.coupons != null)
+				return false;
+		} else if (!coupons.equals(other.coupons))
+			return false;
 		if (paymentId == null) {
 			if (other.paymentId != null)
 				return false;
@@ -202,6 +272,11 @@ public class Transaction implements Serializable {
 			if (other.status != null)
 				return false;
 		} else if (!status.equals(other.status))
+			return false;
+		if (store == null) {
+			if (other.store != null)
+				return false;
+		} else if (!store.equals(other.store))
 			return false;
 		if (storeId == null) {
 			if (other.storeId != null)
@@ -223,6 +298,11 @@ public class Transaction implements Serializable {
 				return false;
 		} else if (!transactionId.equals(other.transactionId))
 			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
 		if (userId == null) {
 			if (other.userId != null)
 				return false;
@@ -230,9 +310,4 @@ public class Transaction implements Serializable {
 			return false;
 		return true;
 	}
-
-	
-	
-	
-
 }
