@@ -34,7 +34,6 @@ public class StoreService {
 	 * Returns all categories
 	 */
 	public List<Category> findAllCategories() {
-		System.out.println("Inside findAllCategories method in StoreService");
 		
 		return cDAO.findAll();
 	};

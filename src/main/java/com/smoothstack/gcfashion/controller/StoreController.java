@@ -28,14 +28,12 @@ public class StoreController {
 		
 		// read all categories
 		List<Category> categories = storeService.findAllCategories();
-		System.out.println("Number of categories read: " + categories.size());
 
 		// a successful request should produce a list not null with a size greater than
 		// zero
 		if (categories != null && categories.size() > 0) {
 			return new ResponseEntity<List<Category>>(categories, HttpStatus.OK);
 		} else {
-			System.out.println("Inside fail else branch");
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
 		}
@@ -52,7 +50,6 @@ public class StoreController {
 		if (subcategories != null && subcategories.size() > 0) {
 			return new ResponseEntity<List<Subcategory>>(subcategories, HttpStatus.OK);
 		} else {
-			System.out.println("Inside fail else branch");
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
 		}
@@ -69,7 +66,6 @@ public class StoreController {
 		if (stores != null && stores.size() > 0) {
 			return new ResponseEntity<List<Store>>(stores, HttpStatus.OK);
 		} else {
-			System.out.println("Inside fail else branch");
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
 		}
@@ -86,7 +82,6 @@ public class StoreController {
 		if (products  != null && products.size() > 0) {
 			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
 		} else {
-			System.out.println("Inside fail else branch");
 			// products  not found, return 404 status
 			return ResponseEntity.notFound().build();
 		}
@@ -103,7 +98,6 @@ public class StoreController {
 		if (products  != null && products.size() > 0) {
 			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
 		} else {
-			System.out.println("Inside fail else branch");
 			// products  not found, return 404 status
 			return ResponseEntity.notFound().build();
 		}
@@ -120,7 +114,6 @@ public class StoreController {
 		if (products  != null && products.size() > 0) {
 			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
 		} else {
-			System.out.println("Inside fail else branch");
 			// products  not found, return 404 status
 			return ResponseEntity.notFound().build();
 		}
