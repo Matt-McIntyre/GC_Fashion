@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smoothstack.gcfashion.entity.Category;
+import com.smoothstack.gcfashion.entity.Subcategory;
 import com.smoothstack.gcfashion.entity.Product;
+import com.smoothstack.gcfashion.entity.Store;
 import com.smoothstack.gcfashion.service.StoreService;
 
 @RestController
@@ -32,6 +34,40 @@ public class StoreController {
 		// zero
 		if (categories != null && categories.size() > 0) {
 			return new ResponseEntity<List<Category>>(categories, HttpStatus.OK);
+		} else {
+			System.out.println("Inside fail else branch");
+			// author id not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/subcategories")
+	public ResponseEntity<List<Subcategory>> getAllSubcategory() {
+		
+		// read all subcategories
+		List<Subcategory> subcategories = storeService.findAllSubcategories();
+		System.out.println("Number of subcategories read: " + subcategories.size());
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (subcategories != null && subcategories.size() > 0) {
+			return new ResponseEntity<List<Subcategory>>(subcategories, HttpStatus.OK);
+		} else {
+			System.out.println("Inside fail else branch");
+			// author id not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/stores")
+	public ResponseEntity<List<Store>> getAllStores() {
+		
+		// read all stores
+		List<Store> stores = storeService.findAllStores();
+		System.out.println("Number of subcategories read: " + stores.size());
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (stores != null && stores.size() > 0) {
+			return new ResponseEntity<List<Store>>(stores, HttpStatus.OK);
 		} else {
 			System.out.println("Inside fail else branch");
 			// author id not found, return 404 status

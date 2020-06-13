@@ -45,24 +45,48 @@ public class Product implements Serializable {
 		return productId;
 	}
 
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
 	public String getProductName() {
 		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 
 	public String getGender() {
 		return gender;
 	}
 
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 	public String getDescription() {
 		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getPhoto() {
 		return photo;
 	}
 
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
 	public Long getCatId() {
 		return catId;
+	}
+
+	public void setCatId(Long catId) {
+		this.catId = catId;
 	}
 
 	@Override

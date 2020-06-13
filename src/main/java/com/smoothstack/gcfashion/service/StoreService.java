@@ -6,9 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.smoothstack.gcfashion.dao.CategoryDAO;
+import com.smoothstack.gcfashion.dao.SubcategoryDAO;
+import com.smoothstack.gcfashion.dao.StoreDAO;
 import com.smoothstack.gcfashion.dao.ProductDAO;
 
 import com.smoothstack.gcfashion.entity.Category;
+import com.smoothstack.gcfashion.entity.Subcategory;
+import com.smoothstack.gcfashion.entity.Store;
 import com.smoothstack.gcfashion.entity.Product;
 
 @Service
@@ -16,6 +20,12 @@ public class StoreService {
 
 	@Autowired
 	CategoryDAO cDAO;
+	
+	@Autowired
+	SubcategoryDAO scDAO;
+	
+	@Autowired
+	StoreDAO sDAO;
 	
 	@Autowired
 	ProductDAO pDAO;
@@ -27,6 +37,22 @@ public class StoreService {
 		System.out.println("Inside findAllCategories method in StoreService");
 		
 		return cDAO.findAll();
+	};
+	
+	/**
+	 * Returns all subcategories
+	 */
+	public List<Subcategory> findAllSubcategories() {
+		
+		return scDAO.findAll();
+	};
+	
+	/**
+	 * Returns all stores
+	 */
+	public List<Store> findAllStores() {
+		
+		return sDAO.findAll();
 	};
 	
 	/**
