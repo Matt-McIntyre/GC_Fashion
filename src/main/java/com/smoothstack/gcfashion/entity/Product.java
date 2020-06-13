@@ -1,15 +1,12 @@
 package com.smoothstack.gcfashion.entity;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,8 +16,8 @@ public class Product implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7358429529066252621L;
-	
+	private static final long serialVersionUID = -4179099953060096491L;
+
 	@Id
 	@Column(name = "product_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
