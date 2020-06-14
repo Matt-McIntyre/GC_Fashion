@@ -25,7 +25,7 @@ public class Product implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4179099953060096491L;
+	private static final long serialVersionUID = 6681936865001420473L;
 
 	@Id
 	@Column(name = "product_id")
@@ -47,15 +47,23 @@ public class Product implements Serializable {
 	@Column(name = "cat_id")
 	private Long catId;
 	
+	@Column(name = "subcat_id")
+	private Long subcatId;
+	
+	@Column(name = "price")
+	private Double price;
+	
 	@ManyToOne
 	@MapsId("catId")
 	@JoinColumn(name = "cat_id")
 	@JsonBackReference(value="productCategory")
 	private Category category;
 	
-	@ManyToMany(mappedBy = "products")
-//	@JsonBackReference(value="genres")
-	private List<Transaction> transactions;
+	@ManyToOne
+	@MapsId("subcatId")
+	@JoinColumn(name = "subcat_id")
+	@JsonBackReference(value="productSubcategory")
+	private Subcategory subcategory;
 	
 	@OneToMany(mappedBy = "product")
 	private List<Inventory> inventory;
@@ -145,6 +153,34 @@ public class Product implements Serializable {
 	}
 
 	/**
+	 * @return the subcatId
+	 */
+	public Long getSubcatId() {
+		return subcatId;
+	}
+
+	/**
+	 * @param subcatId the subcatId to set
+	 */
+	public void setSubcatId(Long subcatId) {
+		this.subcatId = subcatId;
+	}
+
+	/**
+	 * @return the price
+	 */
+	public Double getPrice() {
+		return price;
+	}
+
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	/**
 	 * @return the category
 	 */
 	public Category getCategory() {
@@ -159,17 +195,17 @@ public class Product implements Serializable {
 	}
 
 	/**
-	 * @return the transactions
+	 * @return the subcategory
 	 */
-	public List<Transaction> getTransactions() {
-		return transactions;
+	public Subcategory getSubcategory() {
+		return subcategory;
 	}
 
 	/**
-	 * @param transactions the transactions to set
+	 * @param subcategory the subcategory to set
 	 */
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
+	public void setSubcategory(Subcategory subcategory) {
+		this.subcategory = subcategory;
 	}
 
 	/**
@@ -196,9 +232,11 @@ public class Product implements Serializable {
 		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
 		result = prime * result + ((photo == null) ? 0 : photo.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((productId == null) ? 0 : productId.hashCode());
 		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
-		result = prime * result + ((transactions == null) ? 0 : transactions.hashCode());
+		result = prime * result + ((subcatId == null) ? 0 : subcatId.hashCode());
+		result = prime * result + ((subcategory == null) ? 0 : subcategory.hashCode());
 		return result;
 	}
 
@@ -241,6 +279,11 @@ public class Product implements Serializable {
 				return false;
 		} else if (!photo.equals(other.photo))
 			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
 		if (productId == null) {
 			if (other.productId != null)
 				return false;
@@ -251,10 +294,15 @@ public class Product implements Serializable {
 				return false;
 		} else if (!productName.equals(other.productName))
 			return false;
-		if (transactions == null) {
-			if (other.transactions != null)
+		if (subcatId == null) {
+			if (other.subcatId != null)
 				return false;
-		} else if (!transactions.equals(other.transactions))
+		} else if (!subcatId.equals(other.subcatId))
+			return false;
+		if (subcategory == null) {
+			if (other.subcategory != null)
+				return false;
+		} else if (!subcategory.equals(other.subcategory))
 			return false;
 		return true;
 	}

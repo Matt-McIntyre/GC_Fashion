@@ -1,6 +1,7 @@
 package com.smoothstack.gcfashion.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -21,7 +23,7 @@ public class Subcategory implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5025050942490678068L;
+	private static final long serialVersionUID = 7721612903950665419L;
 
 	@Id
 	@Column(name = "subcat_id")
@@ -42,6 +44,10 @@ public class Subcategory implements Serializable {
 	@JoinColumn(name = "cat_id")
 	@JsonBackReference(value="subcategoryCategory")
 	private Category category;
+	
+	@OneToMany(mappedBy = "subcategory")
+	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+	private List<Product> products;
 
 	/**
 	 * @return the subcatId
@@ -113,12 +119,27 @@ public class Subcategory implements Serializable {
 		this.category = category;
 	}
 
+	/**
+	 * @return the products
+	 */
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	/**
+	 * @param products the products to set
+	 */
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((catId == null) ? 0 : catId.hashCode());
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
+		result = prime * result + ((products == null) ? 0 : products.hashCode());
 		result = prime * result + ((subcatDesc == null) ? 0 : subcatDesc.hashCode());
 		result = prime * result + ((subcatId == null) ? 0 : subcatId.hashCode());
 		result = prime * result + ((subcatName == null) ? 0 : subcatName.hashCode());
@@ -144,6 +165,11 @@ public class Subcategory implements Serializable {
 				return false;
 		} else if (!category.equals(other.category))
 			return false;
+		if (products == null) {
+			if (other.products != null)
+				return false;
+		} else if (!products.equals(other.products))
+			return false;
 		if (subcatDesc == null) {
 			if (other.subcatDesc != null)
 				return false;
@@ -163,9 +189,5 @@ public class Subcategory implements Serializable {
 	}
 
 	
-
-	
-	
-
 
 }

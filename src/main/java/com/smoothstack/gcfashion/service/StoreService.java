@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.smoothstack.gcfashion.dao.CategoryDAO;
 import com.smoothstack.gcfashion.dao.SubcategoryDAO;
+import com.smoothstack.gcfashion.dao.TransactionDAO;
 import com.smoothstack.gcfashion.dao.StoreDAO;
 import com.smoothstack.gcfashion.dao.ProductDAO;
 
 import com.smoothstack.gcfashion.entity.Category;
 import com.smoothstack.gcfashion.entity.Subcategory;
+import com.smoothstack.gcfashion.entity.Transaction;
 import com.smoothstack.gcfashion.entity.Store;
 import com.smoothstack.gcfashion.entity.Product;
 
@@ -29,6 +31,9 @@ public class StoreService {
 	
 	@Autowired
 	ProductDAO pDAO;
+	
+	@Autowired
+	TransactionDAO tDAO;
 	
 	/**
 	 * Returns all categories
@@ -52,6 +57,14 @@ public class StoreService {
 	public List<Store> findAllStores() {
 		
 		return sDAO.findAll();
+	};
+	
+	/**
+	 * Returns all transactions
+	 */
+	public List<Transaction> findAllTransactions() {
+		
+		return tDAO.findAll();
 	};
 	
 	/**

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.smoothstack.gcfashion.entity.Category;
 import com.smoothstack.gcfashion.entity.Subcategory;
+import com.smoothstack.gcfashion.entity.Transaction;
 import com.smoothstack.gcfashion.entity.Product;
 import com.smoothstack.gcfashion.entity.Store;
 import com.smoothstack.gcfashion.service.StoreService;
@@ -65,6 +66,21 @@ public class StoreController {
 		// zero
 		if (stores != null && stores.size() > 0) {
 			return new ResponseEntity<List<Store>>(stores, HttpStatus.OK);
+		} else {
+			// author id not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/transactions")
+	public ResponseEntity<List<Transaction>> getAllTransactions() {
+		
+		// read all stores
+		List<Transaction> transactions = storeService.findAllTransactions();
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (transactions != null && transactions.size() > 0) {
+			return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
