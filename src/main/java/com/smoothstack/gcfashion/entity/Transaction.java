@@ -19,12 +19,12 @@ import javax.persistence.JoinColumn;
 @Entity
 @Table(name = "transaction")
 public class Transaction implements Serializable {
-
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3820265971031908212L;
-	
+	private static final long serialVersionUID = 3401554292155177032L;
+
 	@Id
 	@Column(name = "transaction_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,10 +49,10 @@ public class Transaction implements Serializable {
 	private Double tax;
 	
 	@ManyToMany
-	@JoinTable(name = "transaction_products", 
+	@JoinTable(name = "transaction_inventory", 
 		joinColumns = @JoinColumn(name = "transaction_id"), 
-		inverseJoinColumns = @JoinColumn(name = "product_id"))
-	private List<Product> products;
+		inverseJoinColumns = @JoinColumn(name = "sku"))
+	private List<Inventory> inventory;
 	
 	@ManyToMany
 	@JoinTable(name = "transaction_coupons", 
@@ -171,17 +171,17 @@ public class Transaction implements Serializable {
 	}
 
 	/**
-	 * @return the products
+	 * @return the inventory
 	 */
-	public List<Product> getProducts() {
-		return products;
+	public List<Inventory> getInventory() {
+		return inventory;
 	}
 
 	/**
-	 * @param products the products to set
+	 * @param inventory the inventory to set
 	 */
-	public void setProducts(List<Product> products) {
-		this.products = products;
+	public void setInventory(List<Inventory> inventory) {
+		this.inventory = inventory;
 	}
 
 	/**
@@ -231,8 +231,8 @@ public class Transaction implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((coupons == null) ? 0 : coupons.hashCode());
+		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
 		result = prime * result + ((paymentId == null) ? 0 : paymentId.hashCode());
-		result = prime * result + ((products == null) ? 0 : products.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((store == null) ? 0 : store.hashCode());
 		result = prime * result + ((storeId == null) ? 0 : storeId.hashCode());
@@ -258,15 +258,15 @@ public class Transaction implements Serializable {
 				return false;
 		} else if (!coupons.equals(other.coupons))
 			return false;
+		if (inventory == null) {
+			if (other.inventory != null)
+				return false;
+		} else if (!inventory.equals(other.inventory))
+			return false;
 		if (paymentId == null) {
 			if (other.paymentId != null)
 				return false;
 		} else if (!paymentId.equals(other.paymentId))
-			return false;
-		if (products == null) {
-			if (other.products != null)
-				return false;
-		} else if (!products.equals(other.products))
 			return false;
 		if (status == null) {
 			if (other.status != null)
@@ -310,4 +310,6 @@ public class Transaction implements Serializable {
 			return false;
 		return true;
 	}
+
+
 }

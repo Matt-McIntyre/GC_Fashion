@@ -1,6 +1,7 @@
 package com.smoothstack.gcfashion.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
@@ -21,7 +23,7 @@ public class Inventory implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8016509174875798408L;
+	private static final long serialVersionUID = -4647088333986609526L;
 
 	@Id
 	@Column(name = "sku")
@@ -31,20 +33,21 @@ public class Inventory implements Serializable {
 	@Column(name = "product_id")
 	private Long productId;
 	
-	@Column(name = "store_id")
-	private Long storeId;
-	
 	@Column(name = "qty")
 	private Long qty;
 
 	@Column(name = "size")
-	private Long size;
+	private String size;
 	
 	@ManyToOne
 	@MapsId("productId")
 	@JoinColumn(name = "product_id")
-//	@JsonBackReference(value="productCategory")
+	@JsonBackReference(value="inventoryProduct")
 	private Product product;
+	
+	@ManyToMany(mappedBy = "inventory")
+	@JsonBackReference(value="inventoryTransactions")
+	private List<Transaction> transactions;
 
 	/**
 	 * @return the sku
@@ -75,20 +78,6 @@ public class Inventory implements Serializable {
 	}
 
 	/**
-	 * @return the storeId
-	 */
-	public Long getStoreId() {
-		return storeId;
-	}
-
-	/**
-	 * @param storeId the storeId to set
-	 */
-	public void setStoreId(Long storeId) {
-		this.storeId = storeId;
-	}
-
-	/**
 	 * @return the qty
 	 */
 	public Long getQty() {
@@ -105,14 +94,14 @@ public class Inventory implements Serializable {
 	/**
 	 * @return the size
 	 */
-	public Long getSize() {
+	public String getSize() {
 		return size;
 	}
 
 	/**
 	 * @param size the size to set
 	 */
-	public void setSize(Long size) {
+	public void setSize(String size) {
 		this.size = size;
 	}
 
@@ -130,6 +119,20 @@ public class Inventory implements Serializable {
 		this.product = product;
 	}
 
+	/**
+	 * @return the transactions
+	 */
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	/**
+	 * @param transactions the transactions to set
+	 */
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -139,7 +142,7 @@ public class Inventory implements Serializable {
 		result = prime * result + ((qty == null) ? 0 : qty.hashCode());
 		result = prime * result + ((size == null) ? 0 : size.hashCode());
 		result = prime * result + ((sku == null) ? 0 : sku.hashCode());
-		result = prime * result + ((storeId == null) ? 0 : storeId.hashCode());
+		result = prime * result + ((transactions == null) ? 0 : transactions.hashCode());
 		return result;
 	}
 
@@ -177,10 +180,10 @@ public class Inventory implements Serializable {
 				return false;
 		} else if (!sku.equals(other.sku))
 			return false;
-		if (storeId == null) {
-			if (other.storeId != null)
+		if (transactions == null) {
+			if (other.transactions != null)
 				return false;
-		} else if (!storeId.equals(other.storeId))
+		} else if (!transactions.equals(other.transactions))
 			return false;
 		return true;
 	}
