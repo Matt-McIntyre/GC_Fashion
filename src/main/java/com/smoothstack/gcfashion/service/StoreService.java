@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.smoothstack.gcfashion.dao.CategoryDAO;
+import com.smoothstack.gcfashion.dao.CouponDAO;
 import com.smoothstack.gcfashion.dao.SubcategoryDAO;
 import com.smoothstack.gcfashion.dao.TransactionDAO;
 import com.smoothstack.gcfashion.dao.StoreDAO;
 import com.smoothstack.gcfashion.dao.ProductDAO;
 
 import com.smoothstack.gcfashion.entity.Category;
+import com.smoothstack.gcfashion.entity.Coupon;
 import com.smoothstack.gcfashion.entity.Subcategory;
 import com.smoothstack.gcfashion.entity.Transaction;
 import com.smoothstack.gcfashion.entity.Store;
@@ -22,6 +24,9 @@ public class StoreService {
 
 	@Autowired
 	CategoryDAO cDAO;
+	
+	@Autowired
+	CouponDAO cpDAO;
 	
 	@Autowired
 	SubcategoryDAO scDAO;
@@ -60,12 +65,26 @@ public class StoreService {
 	};
 	
 	/**
-	 * Returns all transactions
+	 * Returns transactions by userId
 	 */
-	public List<Transaction> findAllTransactions() {
+	public List<Transaction> findTransactionsByUserId(long userId) {
 		
-		return tDAO.findAll();
+		return tDAO.findByUserId(userId);
 	};
+	
+	/**
+	 * Returns all coupons
+	 */
+	public List<Coupon> findAllCoupons() {
+		return cpDAO.findAll();
+	};
+
+//	/**
+//	 * Returns all coupons by catId
+//	 */
+//	public List<Coupon> findCouponsByCatId(long catId) {
+//		return cpDAO.findByCatId(catId);
+//	};
 	
 	/**
 	 * Returns all products

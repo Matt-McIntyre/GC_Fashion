@@ -41,7 +41,7 @@ public class User implements Serializable {
 	private String fullName;
 	
 	@Column(name = "address")
-	private Long address;
+	private String address;
 	
 	@OneToMany(mappedBy = "user")
 	private List<Transaction> transactions;
@@ -133,14 +133,14 @@ public class User implements Serializable {
 	/**
 	 * @return the address
 	 */
-	public Long getAddress() {
+	public String getAddress() {
 		return address;
 	}
 
 	/**
 	 * @param address the address to set
 	 */
-	public void setAddress(Long address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 

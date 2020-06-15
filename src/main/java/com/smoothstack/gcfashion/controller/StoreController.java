@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.smoothstack.gcfashion.entity.Category;
+import com.smoothstack.gcfashion.entity.Coupon;
 import com.smoothstack.gcfashion.entity.Subcategory;
 import com.smoothstack.gcfashion.entity.Transaction;
 import com.smoothstack.gcfashion.entity.Product;
@@ -72,11 +74,11 @@ public class StoreController {
 		}
 	}
 	
-	@GetMapping("/transactions")
-	public ResponseEntity<List<Transaction>> getAllTransactions() {
-		
+	@GetMapping("shop/transactions")
+	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@RequestBody Transaction transaction) {
+		System.out.println(transaction);
 		// read all stores
-		List<Transaction> transactions = storeService.findAllTransactions();
+		List<Transaction> transactions = storeService.findTransactionsByUserId(transaction.getUserId());
 		// a successful request should produce a list not null with a size greater than
 		// zero
 		if (transactions != null && transactions.size() > 0) {
@@ -86,6 +88,22 @@ public class StoreController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	@GetMapping("shop/coupons")
+	public ResponseEntity<List<Coupon>> findAllCoupons() {
+		
+		// read Coupons
+		List<Coupon> coupons = storeService.findAllCoupons();
+
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (coupons  != null && coupons.size() > 0) {
+			return new ResponseEntity<List<Coupon>>(coupons , HttpStatus.OK);
+		} else {
+			// Coupons  not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	};
 	
 	@GetMapping("shop/products")
 	public ResponseEntity<List<Product>> getAllProduct() {
