@@ -69,8 +69,57 @@ public class StoreService {
 	 */
 	public List<Transaction> findTransactionsByUserId(long userId) {
 		
-		return tDAO.findByUserId(userId);
+		return tDAO.find(userId);
 	};
+	
+	public Integer saveTransaction(Transaction transaction) {
+
+		// perform write operation depending on which object variables are set
+		// update case where both a key and store id are given
+		if (transaction.getTransactionId() != null && transaction.getStoreId() != null) {
+
+			// update transaction if transaction id matches existing record
+			if (tDAO.findById(transaction.getTransactionId()).isPresent()) {
+				System.out.println("Transaction id found");
+				tDAO.save(transaction);
+			} else {
+				System.out.println("Transaction id not found");
+				return -1;
+			}
+		}
+
+		// deletion case when an id is given but no name
+		else if (transaction.getTransactionId() != null) {
+//
+			// if author to delete doesn't exist, return error status
+			if (tDAO.findById(transaction.getTransactionId()).isPresent()) {
+				try {
+					tDAO.deleteById(transaction.getTransactionId());
+				} catch (Exception e) {
+					// query error
+					return -1;
+				}
+			} else {
+				// not found
+				return 1;
+			}
+		}
+
+		// insertion case otherwise
+		else {
+			try {
+				// create the new record
+				tDAO.save(transaction);
+			} catch (Exception e) {
+				// query error
+				return -1;
+			}
+		}
+
+
+		return 0;
+	}
+	
 	
 	/**
 	 * Returns all coupons

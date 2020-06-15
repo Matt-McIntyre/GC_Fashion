@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -76,7 +78,6 @@ public class StoreController {
 	
 	@GetMapping("shop/transactions")
 	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@RequestBody Transaction transaction) {
-		System.out.println(transaction);
 		// read all stores
 		List<Transaction> transactions = storeService.findTransactionsByUserId(transaction.getUserId());
 		// a successful request should produce a list not null with a size greater than
@@ -86,6 +87,38 @@ public class StoreController {
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@PostMapping("/shop/transactions")
+	public ResponseEntity<String> createTransaction(@RequestBody Transaction transaction) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+
+		// update a transaction
+		returnInt = storeService.saveTransaction(transaction);
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@DeleteMapping("/shop/transactions")
+	public ResponseEntity<String> deleteTransaction(@RequestBody Transaction transaction) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+
+		// update a transaction
+		returnInt = storeService.saveTransaction(transaction);
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
 		}
 	}
 	

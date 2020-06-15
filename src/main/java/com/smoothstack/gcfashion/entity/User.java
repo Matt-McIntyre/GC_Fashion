@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
@@ -22,6 +24,7 @@ public class User implements Serializable {
 
 	@Id
 	@Column(name = "user_id")
+	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 	
@@ -44,6 +47,7 @@ public class User implements Serializable {
 	private String address;
 	
 	@OneToMany(mappedBy = "user")
+	@JsonBackReference(value="userTransactions")
 	private List<Transaction> transactions;
 
 	/**

@@ -20,6 +20,7 @@ public class TransactionProducts implements Serializable {
 	private static final long serialVersionUID = -4179099953060096491L;
 
 	@EmbeddedId
+	
 	TransactionProductsKey id;
 	
 	@Column(name = "sku")
