@@ -11,6 +11,7 @@ import com.smoothstack.gcfashion.dao.SubcategoryDAO;
 import com.smoothstack.gcfashion.dao.TransactionDAO;
 import com.smoothstack.gcfashion.dao.StoreDAO;
 import com.smoothstack.gcfashion.dao.ProductDAO;
+import com.smoothstack.gcfashion.dao.UserDAO;
 
 import com.smoothstack.gcfashion.entity.Category;
 import com.smoothstack.gcfashion.entity.Coupon;
@@ -18,6 +19,7 @@ import com.smoothstack.gcfashion.entity.Subcategory;
 import com.smoothstack.gcfashion.entity.Transaction;
 import com.smoothstack.gcfashion.entity.Store;
 import com.smoothstack.gcfashion.entity.Product;
+import com.smoothstack.gcfashion.entity.User;
 
 @Service
 public class StoreService {
@@ -39,6 +41,9 @@ public class StoreService {
 	
 	@Autowired
 	TransactionDAO tDAO;
+	
+	@Autowired
+	UserDAO uDAO;
 	
 	/**
 	 * Returns all categories
@@ -74,39 +79,6 @@ public class StoreService {
 	
 	public Integer saveTransaction(Transaction transaction) {
 
-		// perform write operation depending on which object variables are set
-		// update case where both a key and store id are given
-		if (transaction.getTransactionId() != null && transaction.getStoreId() != null) {
-
-			// update transaction if transaction id matches existing record
-			if (tDAO.findById(transaction.getTransactionId()).isPresent()) {
-				System.out.println("Transaction id found");
-				tDAO.save(transaction);
-			} else {
-				System.out.println("Transaction id not found");
-				return -1;
-			}
-		}
-
-		// deletion case when an id is given but no name
-		else if (transaction.getTransactionId() != null) {
-//
-			// if author to delete doesn't exist, return error status
-			if (tDAO.findById(transaction.getTransactionId()).isPresent()) {
-				try {
-					tDAO.deleteById(transaction.getTransactionId());
-				} catch (Exception e) {
-					// query error
-					return -1;
-				}
-			} else {
-				// not found
-				return 1;
-			}
-		}
-
-		// insertion case otherwise
-		else {
 			try {
 				// create the new record
 				tDAO.save(transaction);
@@ -114,10 +86,19 @@ public class StoreService {
 				// query error
 				return -1;
 			}
-		}
-
 
 		return 0;
+	}
+	
+	public Integer deleteTransaction(long transactionId) {
+		try {
+			tDAO.deleteById(transactionId);
+			return 1;
+		} catch (Exception e) {
+			// query error
+			return 0;
+		} 
+				
 	}
 	
 	
@@ -127,13 +108,6 @@ public class StoreService {
 	public List<Coupon> findAllCoupons() {
 		return cpDAO.findAll();
 	};
-
-//	/**
-//	 * Returns all coupons by catId
-//	 */
-//	public List<Coupon> findCouponsByCatId(long catId) {
-//		return cpDAO.findByCatId(catId);
-//	};
 	
 	/**
 	 * Returns all products
@@ -155,4 +129,22 @@ public class StoreService {
 	public List<Product> findProductsByProductId(long productId) {
 		return pDAO.findByProductId(productId);
 	};
+	
+	public User findUserByUserId(long userId) {
+		return uDAO.findByUserId(userId);
+	};
+	
+	public Integer saveUser(User user) {
+
+		try {
+			// create the new record
+			uDAO.save(user);
+		} catch (Exception e) {
+			// query error
+			System.out.print(e);
+			return -1;
+		}
+
+	return 0;
+}
 }
