@@ -5,6 +5,10 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Embeddable
 public class TransactionCouponsKey implements Serializable {
@@ -13,7 +17,7 @@ public class TransactionCouponsKey implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5772758063458400270L;
-
+	
 	@Column(name = "transaction_id")
 	private Long transactionId;
 

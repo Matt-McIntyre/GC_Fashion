@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+
 import javax.persistence.JoinColumn;
 
 
@@ -63,13 +64,11 @@ public class Transaction implements Serializable {
 	@ManyToOne
 	@MapsId("storeId")
 	@JoinColumn(name = "store_id")
-//	@JsonBackReference(value="productCategory")
 	private Store store;
 	
 	@ManyToOne
 	@MapsId("userId")
 	@JoinColumn(name = "user_id")
-//	@JsonBackReference(value="productCategory")
 	private User user;
 
 	/**

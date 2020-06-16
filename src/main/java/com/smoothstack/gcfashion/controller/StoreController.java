@@ -5,24 +5,122 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.smoothstack.gcfashion.entity.Category;
+import com.smoothstack.gcfashion.entity.Coupon;
 import com.smoothstack.gcfashion.entity.Subcategory;
 import com.smoothstack.gcfashion.entity.Transaction;
+import com.smoothstack.gcfashion.entity.User;
 import com.smoothstack.gcfashion.entity.Product;
 import com.smoothstack.gcfashion.entity.Store;
 import com.smoothstack.gcfashion.service.StoreService;
 
 @RestController
-@RequestMapping("/gcfashions")
+@RequestMapping("/gcfashions/shop")
 public class StoreController {
 	
 	@Autowired
 	StoreService storeService;
+	
+	@GetMapping("/products")
+	public ResponseEntity<List<Product>> getAllProduct() {
+		
+		// read all products
+		List<Product> products = storeService.findAllProducts();
+
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (products  != null && products.size() > 0) {
+			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
+		} else {
+			// products  not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/products/{productId}")
+	public ResponseEntity<List<Product>> getProductByProductId(@PathVariable long productId) {
+		
+		// read products
+		List<Product> products = storeService.findProductsByProductId(productId);
+
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (products  != null && products.size() > 0) {
+			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
+		} else {
+			// products  not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/coupons")
+	public ResponseEntity<List<Coupon>> findAllCoupons() {
+		
+		// read Coupons
+		List<Coupon> coupons = storeService.findAllCoupons();
+
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (coupons  != null && coupons.size() > 0) {
+			return new ResponseEntity<List<Coupon>>(coupons , HttpStatus.OK);
+		} else {
+			// Coupons  not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/transactions/{userId}")
+	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
+		// read all stores
+		List<Transaction> transactions = storeService.findTransactionsByUserId(userId);
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (transactions != null && transactions.size() > 0) {
+			return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
+		} else {
+			// author id not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@PostMapping("/transactions")
+	public ResponseEntity<String> createTransaction(@RequestBody Transaction transaction) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+
+		// update a transaction
+		returnInt = storeService.saveTransaction(transaction);
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@DeleteMapping("/transactions/{transactionId}")
+	public ResponseEntity<String> deleteTransaction(@PathVariable long transactionId) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+		// update a transaction
+		returnInt = storeService.deleteTransaction(transactionId);
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	@GetMapping("/categories")
 	public ResponseEntity<List<Category>> getAllCategories() {
@@ -56,6 +154,22 @@ public class StoreController {
 		}
 	}
 	
+	@GetMapping("/category/{categoryId}")
+	public ResponseEntity<List<Product>> getProductByCatId(@PathVariable long catId) {
+		
+		// read products
+		List<Product> products = storeService.findProductsByCatId(catId);
+
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (products  != null && products.size() > 0) {
+			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
+		} else {
+			// products  not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
 	@GetMapping("/stores")
 	public ResponseEntity<List<Store>> getAllStores() {
 		
@@ -72,66 +186,35 @@ public class StoreController {
 		}
 	}
 	
-	@GetMapping("/transactions")
-	public ResponseEntity<List<Transaction>> getAllTransactions() {
+	//might removes not in swagger urls
+	@GetMapping("/account/users/{userId}")
+	public ResponseEntity<User> getUserByUserId(@PathVariable Long userId) {
 		
 		// read all stores
-		List<Transaction> transactions = storeService.findAllTransactions();
+		User user = storeService.findUserByUserId(userId);
 		// a successful request should produce a list not null with a size greater than
 		// zero
-		if (transactions != null && transactions.size() > 0) {
-			return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
+		if (user != null ) {
+			return new ResponseEntity<User>(user, HttpStatus.OK);
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
 		}
 	}
 	
-	@GetMapping("shop/products")
-	public ResponseEntity<List<Product>> getAllProduct() {
-		
-		// read all products
-		List<Product> products = storeService.findAllProducts();
+	@PostMapping("/account/users")
+	public ResponseEntity<String> saveUser(@RequestBody User user) {
 
-		// a successful request should produce a list not null with a size greater than
-		// zero
-		if (products  != null && products.size() > 0) {
-			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
+		Integer returnInt = -1; // for determining HttpStatus
+
+		// update a transaction
+		returnInt = storeService.saveUser(user);
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
-			// products  not found, return 404 status
-			return ResponseEntity.notFound().build();
+			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	@GetMapping("shop/products/{productId}")
-	public ResponseEntity<List<Product>> getProductByProductId(@PathVariable long productId) {
-		
-		// read products
-		List<Product> products = storeService.findProductsByProductId(productId);
-
-		// a successful request should produce a list not null with a size greater than
-		// zero
-		if (products  != null && products.size() > 0) {
-			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
-		} else {
-			// products  not found, return 404 status
-			return ResponseEntity.notFound().build();
-		}
-	};
-	
-	@GetMapping("/shop/category/{categoryId}")
-	public ResponseEntity<List<Product>> getProductByCatId(@PathVariable long catId) {
-		
-		// read products
-		List<Product> products = storeService.findProductsByCatId(catId);
-
-		// a successful request should produce a list not null with a size greater than
-		// zero
-		if (products  != null && products.size() > 0) {
-			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
-		} else {
-			// products  not found, return 404 status
-			return ResponseEntity.notFound().build();
-		}
-	};
 }
