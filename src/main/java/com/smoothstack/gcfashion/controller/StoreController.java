@@ -1,6 +1,7 @@
 package com.smoothstack.gcfashion.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,15 +47,15 @@ public class StoreController {
 	}
 	
 	@GetMapping("/products/{productId}")
-	public ResponseEntity<List<Product>> getProductByProductId(@PathVariable long productId) {
+	public ResponseEntity<Optional<Product>> getProductByProductId(@PathVariable long productId) {
 		
 		// read products
-		List<Product> products = storeService.findProductsByProductId(productId);
+		Optional<Product> products = storeService.findProductsByProductId(productId);
 
 		// a successful request should produce a list not null with a size greater than
 		// zero
-		if (products  != null && products.size() > 0) {
-			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
+		if (products.isPresent()  != true) {
+			return new ResponseEntity<Optional<Product>>(products , HttpStatus.OK);
 		} else {
 			// products  not found, return 404 status
 			return ResponseEntity.notFound().build();
@@ -78,13 +79,13 @@ public class StoreController {
 	}
 	
 	@GetMapping("/transactions/{userId}")
-	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
+	public ResponseEntity<Optional<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
 		// read all stores
-		List<Transaction> transactions = storeService.findTransactionsByUserId(userId);
+		Optional<Transaction> transactions = storeService.findTransactionsByUserId(userId);
 		// a successful request should produce a list not null with a size greater than
 		// zero
-		if (transactions != null && transactions.size() > 0) {
-			return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
+		if (transactions.isPresent()  != true) {
+			return new ResponseEntity<Optional<Transaction>>(transactions, HttpStatus.OK);
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
@@ -155,15 +156,15 @@ public class StoreController {
 	}
 	
 	@GetMapping("/category/{categoryId}")
-	public ResponseEntity<List<Product>> getProductByCatId(@PathVariable long catId) {
+	public ResponseEntity<Optional<Product>> getProductByCatId(@PathVariable long catId) {
 		
 		// read products
-		List<Product> products = storeService.findProductsByCatId(catId);
+		Optional<Product> products = storeService.findProductsByCatId(catId);
 
 		// a successful request should produce a list not null with a size greater than
 		// zero
-		if (products  != null && products.size() > 0) {
-			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
+		if (products.isPresent()  != true) {
+			return new ResponseEntity<Optional<Product>>(products , HttpStatus.OK);
 		} else {
 			// products  not found, return 404 status
 			return ResponseEntity.notFound().build();
@@ -188,14 +189,14 @@ public class StoreController {
 	
 	//might removes not in swagger urls
 	@GetMapping("/account/users/{userId}")
-	public ResponseEntity<User> getUserByUserId(@PathVariable Long userId) {
+	public ResponseEntity<Optional<User>> getUserByUserId(@PathVariable Long userId) {
 		
 		// read all stores
-		User user = storeService.findUserByUserId(userId);
+		Optional<User> user = storeService.findUserByUserId(userId);
 		// a successful request should produce a list not null with a size greater than
 		// zero
 		if (user != null ) {
-			return new ResponseEntity<User>(user, HttpStatus.OK);
+			return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();

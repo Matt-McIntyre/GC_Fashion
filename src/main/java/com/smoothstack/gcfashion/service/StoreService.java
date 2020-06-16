@@ -1,6 +1,7 @@
 package com.smoothstack.gcfashion.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,35 +73,69 @@ public class StoreService {
 	/**
 	 * Returns transactions by userId
 	 */
-	public List<Transaction> findTransactionsByUserId(long userId) {
+	public Optional<Transaction> findTransactionsByUserId(long userId) {
 		
 		return tDAO.find(userId);
 	};
 	
 	public Integer saveTransaction(Transaction transaction) {
+		// perform write operation depending on which object variables are set
+				// update case where both a key and store id are given
+				if (transaction.getTransactionId() != null && transaction.getStoreId() != null) {
 
-			try {
-				// create the new record
-				tDAO.save(transaction);
-			} catch (Exception e) {
-				// query error
-				return -1;
-			}
+					// update transaction if transaction id matches existing record
+					if (tDAO.findById(transaction.getTransactionId()).isPresent()) {
+						tDAO.save(transaction);
+					} else {
+						return -1;
+					}
+				}
 
-		return 0;
+				// deletion case when an id is given but no name
+				else if (transaction.getTransactionId() != null) {
+
+					// if author to delete doesn't exist, return error status
+					if (tDAO.findById(transaction.getTransactionId()).isPresent()) {
+						try {
+							tDAO.deleteById(transaction.getTransactionId());
+						} catch (Exception e) {
+							// query error
+							return -1;
+						}
+					} else {
+						// not found
+						return 0;
+					}
+				}
+
+				// insertion case otherwise
+				else {
+					try {
+						// create the new record
+						tDAO.save(transaction);
+					} catch (Exception e) {
+						// query error
+						return -1;
+					}
+				}
+
+				return 1;
 	}
 	
 	public Integer deleteTransaction(long transactionId) {
-		try {
-			tDAO.deleteById(transactionId);
-			return 1;
-		} catch (Exception e) {
-			// query error
+		if (tDAO.findById(transactionId).isPresent()) {
+			
+			try {
+				tDAO.deleteById(transactionId);
+				return 1;
+			} catch (Exception e) {
+				// query error
+				return 0;
+			} 
+		}else {
 			return 0;
-		} 
-				
+		}		
 	}
-	
 	
 	/**
 	 * Returns all coupons
@@ -119,18 +154,18 @@ public class StoreService {
 	/**
 	 * Returns all products by catId
 	 */
-	public List<Product> findProductsByCatId(long catId) {
+	public Optional<Product> findProductsByCatId(long catId) {
 		return pDAO.findByCatId(catId);
 	};
 	
 	/**
 	 * Returns all products by catId
 	 */
-	public List<Product> findProductsByProductId(long productId) {
+	public Optional<Product> findProductsByProductId(long productId) {
 		return pDAO.findByProductId(productId);
 	};
 	
-	public User findUserByUserId(long userId) {
+	public Optional<User> findUserByUserId(long userId) {
 		return uDAO.findByUserId(userId);
 	};
 	

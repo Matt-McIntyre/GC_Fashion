@@ -38,7 +38,7 @@ public class Coupon implements Serializable {
 	private String appliesTo;
 	
 	@Column(name = "discount")
-	private Short discount;
+	private Double discount;
 	
 	@ManyToMany(mappedBy = "coupons")
 	@JsonBackReference(value="transactioncoupons")
@@ -103,14 +103,14 @@ public class Coupon implements Serializable {
 	/**
 	 * @return the discount
 	 */
-	public Short getDiscount() {
+	public Double getDiscount() {
 		return discount;
 	}
 
 	/**
 	 * @param discount the discount to set
 	 */
-	public void setDiscount(Short discount) {
+	public void setDiscount(Double discount) {
 		this.discount = discount;
 	}
 

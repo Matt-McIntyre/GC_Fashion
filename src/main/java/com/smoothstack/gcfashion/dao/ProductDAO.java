@@ -4,11 +4,12 @@ import org.springframework.stereotype.Repository;
 import com.smoothstack.gcfashion.entity.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface ProductDAO extends JpaRepository<Product, Long>{
-	List<Product> findByCatId(Long catId);
-	List<Product> findByProductId(Long productId);
+	Optional<Product> findByCatId(Long catId);
+	Optional<Product> findByProductId(Long productId);
 }
