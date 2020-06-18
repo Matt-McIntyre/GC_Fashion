@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface ProductDAO extends JpaRepository<Product, Long>{
-	Optional<Product> findByCatId(Long catId);
-	Optional<Product> findByProductId(Long productId);
+	List<Product> findByCatId(Long catId);
+	List<Product> findByProductId(Long productId);
 }

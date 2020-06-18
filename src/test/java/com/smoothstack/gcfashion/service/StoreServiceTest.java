@@ -177,10 +177,10 @@ public class StoreServiceTest {
 	
 	@Test
 	public void testInvalidFindTransactionsByUserId() {
-		when(tDAO.find(Long.valueOf(1))).thenReturn(Optional.empty());
-		Optional<Transaction> optResult = storeService.findTransactionsByUserId(1L);
+		when(tDAO.find(Long.valueOf(1))).thenReturn(List.of());
+		List<Transaction> optResult = storeService.findTransactionsByUserId(1L);
 
-		assertEquals(optResult.isPresent(), false);
+		assertEquals(optResult.size(), 1);
 	}
 	
 	@Test
@@ -188,17 +188,17 @@ public class StoreServiceTest {
 		Transaction transaction1 = new Transaction();
 		transaction1.setTransactionId(Long.valueOf(1));
 		
-		when(tDAO.find(Long.valueOf(1))).thenReturn(Optional.of(transaction1));
-		Optional<Transaction> optResult = storeService.findTransactionsByUserId(Long.valueOf(1));
-		assertEquals(optResult.isPresent(), true);
+		when(tDAO.find(Long.valueOf(1))).thenReturn(List.of(transaction1));
+		List<Transaction> optResult = storeService.findTransactionsByUserId(Long.valueOf(1));
+		assertEquals(optResult.size(), 1);
 	}
 	
 	@Test
 	public void testInvalidFindProductsByProductId() {
-		when(pDAO.findByProductId(Long.valueOf(1))).thenReturn(Optional.empty());
-		Optional<Product> optResult = storeService.findProductsByProductId(1L);
+		when(pDAO.findByProductId(Long.valueOf(1))).thenReturn(List.of());
+		List<Product> optResult = storeService.findProductsByProductId(1L);
 
-		assertEquals(optResult.isPresent(), false);
+		assertEquals(optResult.size(), 1);
 	}
 	
 	@Test
@@ -206,17 +206,17 @@ public class StoreServiceTest {
 		Product product1 = new Product();
 		product1.setProductId(Long.valueOf(1));
 		
-		when(pDAO.findByProductId(Long.valueOf(1))).thenReturn(Optional.of(product1));
-		Optional<Product> optResult = storeService.findProductsByProductId(1L);
-		assertEquals(optResult.isPresent(), true);
+		when(pDAO.findByProductId(Long.valueOf(1))).thenReturn(List.of(product1));
+		List<Product> optResult = storeService.findProductsByProductId(1L);
+		assertEquals(optResult.size(), 1);
 	}
 	
 	@Test
 	public void testInvalidFindProductsByCatId() {
-		when(pDAO.findByCatId(Long.valueOf(1))).thenReturn(Optional.empty());
-		Optional<Product> optResult = storeService.findProductsByCatId(1L);
+		when(pDAO.findByCatId(Long.valueOf(1))).thenReturn(List.of());
+		List<Product> optResult = storeService.findProductsByCatId(1L);
 
-		assertEquals(optResult.isPresent(), false);
+		assertEquals(optResult.size(), 1);
 	}
 	
 	@Test
@@ -225,9 +225,9 @@ public class StoreServiceTest {
 		product1.setProductId(Long.valueOf(1));
 		product1.setCatId(Long.valueOf(1));
 		
-		when(pDAO.findByCatId(Long.valueOf(1))).thenReturn(Optional.of(product1));
-		Optional<Product> optResult = storeService.findProductsByCatId(1L);
-		assertEquals(optResult.isPresent(), true);
+		when(pDAO.findByCatId(Long.valueOf(1))).thenReturn(List.of(product1));
+		List<Product> optResult = storeService.findProductsByCatId(1L);
+		assertEquals(optResult.size(), 1);
 	}
 	
 	@Test
