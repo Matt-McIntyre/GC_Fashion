@@ -47,6 +47,22 @@ public class StoreController {
 		}
 	}
 	
+	@GetMapping("/shop/products/like/{productName}")
+	public ResponseEntity<List<Product>> getAllProductLike(@PathVariable String productName) {
+		
+		// read all products
+		List<Product> products = storeService.findAllProductsLike(productName);
+
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (products  != null && products.size() > 0) {
+			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
+		} else {
+			// products  not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
 	@GetMapping("/shop/products/{productId}")
 	public ResponseEntity<List<Product>> getProductByProductId(@PathVariable long productId) {
 		

@@ -135,6 +135,13 @@ public class StoreService {
 	public List<Product> findAllProducts() {
 		return pDAO.findAll();
 	};
+	
+	/**
+	 * Returns all products like the string given
+	 */
+	public List<Product> findAllProductsLike(String productName) {
+		return pDAO.findLike(productName);
+	};
 
 	/**
 	 * Returns products by catId
