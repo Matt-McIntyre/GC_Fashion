@@ -157,16 +157,15 @@ public class StoreController {
 		}
 	}
 	
-	@GetMapping("/shop/subcategories")
-	public ResponseEntity<List<Subcategory>> getAllSubcategory() {
+	@GetMapping("/shop/categories/{catId}/subcategories/{subcatId}")
+	public ResponseEntity<List<Product>> getAllSubcategory(@PathVariable long catId,@PathVariable long subcatId) {
 		
-		// read all subcategories
-		List<Subcategory> subcategories = storeService.findAllSubcategories();
-		System.out.println("Number of subcategories read: " + subcategories.size());
+		// read Product
+		List<Product> subcategories = storeService.findProductsBySubcatId(catId, subcatId);
 		// a successful request should produce a list not null with a size greater than
 		// zero
 		if (subcategories != null && subcategories.size() > 0) {
-			return new ResponseEntity<List<Subcategory>>(subcategories, HttpStatus.OK);
+			return new ResponseEntity<List<Product>>(subcategories, HttpStatus.OK);
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();
@@ -185,7 +184,6 @@ public class StoreController {
 			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
 		} else {
 			// products  not found, return 404 status
-			System.out.print(products);
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -208,14 +206,14 @@ public class StoreController {
 	
 	//might removes not in swagger urls
 	@GetMapping("/account/users/{userId}")
-	public ResponseEntity<Optional<User>> getUserByUserId(@PathVariable Long userId) {
+	public ResponseEntity<List<User>> getUserByUserId(@PathVariable Long userId) {
 		
 		// read all stores
-		Optional<User> user = storeService.findUserByUserId(userId);
+		List<User> user = storeService.findUserByUserId(userId);
 		// a successful request should produce a list not null with a size greater than
 		// zero
 		if (user != null ) {
-			return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
+			return new ResponseEntity<List<User>>(user, HttpStatus.OK);
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();

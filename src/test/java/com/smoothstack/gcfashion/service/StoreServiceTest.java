@@ -180,7 +180,7 @@ public class StoreServiceTest {
 		when(tDAO.find(Long.valueOf(1))).thenReturn(List.of());
 		List<Transaction> optResult = storeService.findTransactionsByUserId(1L);
 
-		assertEquals(optResult.size(), 1);
+		assertEquals(optResult.size(), 0);
 	}
 	
 	@Test
@@ -198,7 +198,7 @@ public class StoreServiceTest {
 		when(pDAO.findByProductId(Long.valueOf(1))).thenReturn(List.of());
 		List<Product> optResult = storeService.findProductsByProductId(1L);
 
-		assertEquals(optResult.size(), 1);
+		assertEquals(optResult.size(), 0);
 	}
 	
 	@Test
@@ -216,7 +216,7 @@ public class StoreServiceTest {
 		when(pDAO.findByCatId(Long.valueOf(1))).thenReturn(List.of());
 		List<Product> optResult = storeService.findProductsByCatId(1L);
 
-		assertEquals(optResult.size(), 1);
+		assertEquals(optResult.size(), 0);
 	}
 	
 	@Test
@@ -226,16 +226,16 @@ public class StoreServiceTest {
 		product1.setCatId(Long.valueOf(1));
 		
 		when(pDAO.findByCatId(Long.valueOf(1))).thenReturn(List.of(product1));
-		List<Product> optResult = storeService.findProductsByCatId(1L);
-		assertEquals(optResult.size(), 1);
+		List<Product> result = storeService.findProductsByCatId(1L);
+		assertEquals(result.size(), 1);
 	}
 	
 	@Test
 	public void testInvalidFindUserByUserId() {
-		when(uDAO.findByUserId(Long.valueOf(1))).thenReturn(Optional.empty());
-		Optional<User> optResult = storeService.findUserByUserId(1L);
+		when(uDAO.findByUserId(Long.valueOf(1))).thenReturn(List.of());
+		List<User> result = storeService.findUserByUserId(1L);
 
-		assertEquals(optResult.isPresent(), false);
+		assertEquals(result.size(), 0);
 	}
 	
 	@Test
@@ -244,9 +244,9 @@ public class StoreServiceTest {
 		user1.setUserId(Long.valueOf(1));
 		user1.setFullName("Name 1");
 		
-		when(uDAO.findByUserId(Long.valueOf(1))).thenReturn(Optional.of(user1));
-		Optional<User> optResult = storeService.findUserByUserId(1L);
-		assertEquals(optResult.isPresent(), true);
+		when(uDAO.findByUserId(Long.valueOf(1))).thenReturn(List.of(user1));
+		List<User> result = storeService.findUserByUserId(1L);
+		assertEquals(result.size(), 1);
 	}
 	
 	@Test
@@ -272,27 +272,11 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testInvalidUpdateTransaction() {
-		Transaction transaction = new Transaction();
-		transaction.setTransactionId(10L);
-		transaction.setStoreId(1L);
-		transaction.setStatus("open");
-		
-		when(tDAO.findById(transaction.getTransactionId())).thenReturn(Optional.empty());
-		
-		int retVal = storeService.saveTransaction(transaction);
-		
-		assertEquals(retVal, -1);
-	}
-	
-	@Test
 	public void testValidUpdateTransaction() {
 		Transaction transaction = new Transaction();
 		transaction.setTransactionId(10L);
 		transaction.setStoreId(1L);
 		transaction.setStatus("open");
-		
-		when(tDAO.findById(transaction.getTransactionId())).thenReturn(Optional.of(transaction));
 		
 		int retVal = storeService.saveTransaction(transaction);
 		
