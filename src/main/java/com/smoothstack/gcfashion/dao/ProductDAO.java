@@ -17,4 +17,7 @@ public interface ProductDAO extends JpaRepository<Product, Long>{
 	List<Product> findByProductId(Long productId);
 	@Query("SELECT p FROM Product p WHERE p.catId = :catId AND p.subcatId = :subcatId")
     public List<Product> find(@Param("catId") long catId, @Param("subcatId") long subcatId);
+	
+	@Query("SELECT p FROM Product p WHERE p.productName LIKE %:productName%")
+    public List<Product> findLike(@Param("productName") String productName);
 }
