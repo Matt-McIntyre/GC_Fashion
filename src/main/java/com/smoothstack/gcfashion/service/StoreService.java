@@ -150,7 +150,11 @@ public class StoreService {
 		return pDAO.findByProductId(productId);
 	};
 	
-	public Optional<User> findUserByUserId(long userId) {
+	public List<Product> findProductsBySubcatId(long catId, long subcatId) {
+		return pDAO.find(catId, subcatId);
+	};
+	
+	public List<User> findUserByUserId(long userId) {
 		return uDAO.findByUserId(userId);
 	};
 	
