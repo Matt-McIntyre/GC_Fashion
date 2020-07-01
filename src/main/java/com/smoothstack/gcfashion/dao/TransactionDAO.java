@@ -1,6 +1,5 @@
 package com.smoothstack.gcfashion.dao;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.smoothstack.gcfashion.entity.Transaction;
 
