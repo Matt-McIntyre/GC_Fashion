@@ -241,7 +241,7 @@ public class StoreController {
 		// otherwise, return coupon associated with open transaction for user
 		if (retVal == -1) {
 			// return response
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.noContent().build();
 		} else {
 			coupon = storeService.getCoupon(retVal);
 
@@ -437,6 +437,7 @@ public class StoreController {
 	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
 		// read all stores
 		List<Transaction> transactions = storeService.findTransactionsByUserId(userId);
+		
 		// a successful request should produce a list not null with a size greater than
 		// zero
 		if (transactions != null && transactions.size() > 0) {
