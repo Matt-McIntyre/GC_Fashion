@@ -165,6 +165,10 @@ public class StoreService {
 		return uDAO.findByUserId(userId);
 	};
 	
+	public String findUserRole(long userId) {
+		return uDAO.findByUserRole(userId);
+	};
+	
 	public Integer saveUser(User user) {
 
 		try {

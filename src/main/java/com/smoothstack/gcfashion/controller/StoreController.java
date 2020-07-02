@@ -95,7 +95,7 @@ public class StoreController {
 		}
 	}
 	
-	@GetMapping("/account/users/{userId}/transactions")
+	@GetMapping("/shop/account/users/{userId}/transactions")
 	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
 		// read all stores
 		List<Transaction> transactions = storeService.findTransactionsByUserId(userId);
@@ -103,6 +103,20 @@ public class StoreController {
 		// zero
 		if (transactions != null && transactions.size() > 0) {
 			return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
+		} else {
+			// author id not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/shop/account/users/{userId}/role")
+	public ResponseEntity<String> findUserRole(@PathVariable long userId) {
+		// read all stores
+		String user = storeService.findUserRole(userId);
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (user.length() > 0) {
+			return new ResponseEntity<String>(user, HttpStatus.OK);
 		} else {
 			// author id not found, return 404 status
 			return ResponseEntity.notFound().build();

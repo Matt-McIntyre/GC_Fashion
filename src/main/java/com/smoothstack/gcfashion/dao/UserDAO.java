@@ -16,4 +16,6 @@ import org.springframework.data.repository.query.Param;
 public interface UserDAO extends JpaRepository<User, Long>{
 	List<User> findByUserId(Long userId);
 	
+	@Query("SELECT role FROM User u WHERE u.userId = :userId")
+    public String findByUserRole(@Param("userId") long userId);
 }
