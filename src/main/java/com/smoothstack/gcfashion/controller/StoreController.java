@@ -95,7 +95,7 @@ public class StoreController {
 		}
 	}
 	
-	@GetMapping("/shop/account/users/{userId}/transactions")
+	@GetMapping("/account/users/{userId}/transactions")
 	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
 		// read all stores
 		List<Transaction> transactions = storeService.findTransactionsByUserId(userId);
@@ -109,7 +109,7 @@ public class StoreController {
 		}
 	}
 	
-	@GetMapping("/shop/account/users/{userId}/role")
+	@GetMapping("/account/users/{userId}/role")
 	public ResponseEntity<String> findUserRole(@PathVariable long userId) {
 		// read all stores
 		String user = storeService.findUserRole(userId);
@@ -123,7 +123,7 @@ public class StoreController {
 		}
 	}
 	
-	@PutMapping("/account/users/{userId}/transactions")
+	@PutMapping("/shop/account/users/{userId}/transactions")
 	public ResponseEntity<String> createTransaction(@RequestBody Transaction transaction) {
 
 		Integer returnInt = -1; // for determining HttpStatus
