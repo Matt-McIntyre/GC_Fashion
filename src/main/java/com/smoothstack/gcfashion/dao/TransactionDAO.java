@@ -1,6 +1,5 @@
 package com.smoothstack.gcfashion.dao;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.smoothstack.gcfashion.entity.Transaction;
 
@@ -16,6 +15,9 @@ public interface TransactionDAO extends JpaRepository<Transaction, Long>{
 
     @Query("SELECT t FROM Transaction t WHERE t.userId = :userId")
     public List<Transaction> find(@Param("userId") Long userId);
+    
+    @Query(value = "SELECT * FROM transaction t WHERE user_id=:userId AND status='open' LIMIT 1", nativeQuery = true)
+	Optional<Transaction> findOpenTransactionsByUserId(@Param("userId") Long userId);
 }
 
 

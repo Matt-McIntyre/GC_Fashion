@@ -1,7 +1,8 @@
 package com.smoothstack.gcfashion.controller;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.smoothstack.gcfashion.entity.Category;
 import com.smoothstack.gcfashion.entity.Coupon;
-import com.smoothstack.gcfashion.entity.Subcategory;
+import com.smoothstack.gcfashion.entity.Inventory;
 import com.smoothstack.gcfashion.entity.Transaction;
 import com.smoothstack.gcfashion.entity.User;
 import com.smoothstack.gcfashion.entity.Product;
@@ -30,6 +31,12 @@ public class StoreController {
 	
 	@Autowired
 	StoreService storeService;
+	
+	//
+	//
+	//  SHOP Path
+	//
+	//
 	
 	@GetMapping("/shop/products")
 	public ResponseEntity<List<Product>> getAllProduct() {
@@ -59,7 +66,7 @@ public class StoreController {
 			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
 		} else {
 			// products  not found, return 404 status
-			return ResponseEntity.notFound().build();
+			return new ResponseEntity<List<Product>>(products , HttpStatus.OK);
 		}
 	}
 	
@@ -94,68 +101,6 @@ public class StoreController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
-	@GetMapping("/account/users/{userId}/transactions")
-	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
-		// read all stores
-		List<Transaction> transactions = storeService.findTransactionsByUserId(userId);
-		// a successful request should produce a list not null with a size greater than
-		// zero
-		if (transactions != null && transactions.size() > 0) {
-			return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
-		} else {
-			// author id not found, return 404 status
-			return ResponseEntity.notFound().build();
-		}
-	}
-	
-	@PutMapping("/account/users/{userId}/transactions")
-	public ResponseEntity<String> createTransaction(@RequestBody Transaction transaction) {
-
-		Integer returnInt = -1; // for determining HttpStatus
-
-		// create new a transaction
-		returnInt = storeService.saveTransaction(transaction);
-
-		// indicate success or failure
-		if (returnInt == 1) {
-			return new ResponseEntity<String>("Success", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PostMapping("/account/users/{userId}/transactions")
-	public ResponseEntity<String> updateTransaction(@RequestBody Transaction transaction, @PathVariable long userId) {
-
-		Integer returnInt = -1; // for determining HttpStatus
-
-		// update a transaction
-		transaction.setTransactionId(userId);
-		returnInt = storeService.saveTransaction(transaction);
-
-		// indicate success or failure
-		if (returnInt == 1) {
-			return new ResponseEntity<String>("Success", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-//	@DeleteMapping("/transactions/{transactionId}")
-//	public ResponseEntity<String> deleteTransaction(@PathVariable long transactionId) {
-//
-//		Integer returnInt = -1; // for determining HttpStatus
-//		// update a transaction
-//		returnInt = storeService.deleteTransaction(transactionId);
-//
-//		// indicate success or failure
-//		if (returnInt == 0) {
-//			return new ResponseEntity<String>("Success", HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
-//		}
-//	}
 	
 	@GetMapping("/shop/categories")
 	public ResponseEntity<List<Category>> getAllCategories() {
@@ -220,6 +165,322 @@ public class StoreController {
 		}
 	}
 	
+	//
+	//
+	//  SHOP / TRANSACTION Path
+	//
+	//
+	
+	@GetMapping("/shop/transactions/{id}")
+	public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
+
+		// read transaction by Id passed in body
+		Transaction transaction = storeService.findTransactionById(id);
+
+		// a successful request should produce non-null transaction return value
+		if (transaction != null) {
+			return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
+		} else {
+			// author id not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/shop/transactions/open/userid/{userId}")
+	public ResponseEntity<Transaction> getOpenTransactionByUserId(@PathVariable Long userId) {
+
+		Transaction transaction = null;
+
+		// get any open transaction by userId passed as PathVariable
+		Long retVal = storeService.openTransactionsExist(userId);
+
+		// set productList to null if no open transaction for userId was found
+		// otherwise, create a product list representing users shopping cart
+		// from that transaction info
+		if (retVal == -1) {
+			// return response
+			return ResponseEntity.notFound().build();
+		} else {
+			transaction = storeService.findTransactionById(retVal);
+			
+			// return response
+			return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("/shop/transactions/cart/userid/{userId}")
+	public ResponseEntity<List<Product>> getCartByUserId(@PathVariable Long userId) {
+
+		List<Product> productList = null;
+
+		// get any open transaction by userId passed as PathVariable
+		Long retVal = storeService.openTransactionsExist(userId);
+
+		// set productList to null if no open transaction for userId was found
+		// otherwise, create a product list representing users shopping cart
+		// from that transaction info
+		if (retVal == -1) {
+			productList = new ArrayList<>(); // create empty list
+		} else {
+			productList = storeService.getCompleteTransactionDetails(retVal);
+		}
+
+		// return response
+		return new ResponseEntity<List<Product>>(productList, HttpStatus.OK);
+	}
+	
+	@GetMapping("/shop/transactions/open/coupon/userid/{userId}")
+	public ResponseEntity<Coupon> getCouponByUserId(@PathVariable Long userId) {
+
+		Coupon coupon = null;
+
+		// get any open transaction by userId passed as PathVariable
+		Long retVal = storeService.openTransactionsExist(userId);
+
+		// return 404 if no open transaction for userId was found
+		// otherwise, return coupon associated with open transaction for user
+		if (retVal == -1) {
+			// return response
+			return ResponseEntity.notFound().build();
+		} else {
+			coupon = storeService.getCoupon(retVal);
+
+			// return response
+			return new ResponseEntity<Coupon>(coupon, HttpStatus.OK);
+		}
+	}
+	
+	@PostMapping("/shop/transactions/open/coupon")
+	public ResponseEntity<String> addCouponByUserId(@RequestBody Transaction t) {
+
+		Transaction existingTransaction = null;
+		Integer returnInt = -1; // for determining HttpStatus
+
+		Long retVal = storeService.openTransactionsExist(t.getUserId());
+
+		// an open transaction exists, update transaction
+		if (retVal != -1) {
+			// get a copy of the existing transaction
+			existingTransaction = storeService.findTransactionById(retVal);
+
+			// set new coupon values
+			existingTransaction.setCoupons(t.getCoupons());
+
+			// update the existing transaction
+			returnInt = storeService.saveTransaction(existingTransaction);
+		}
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("", HttpStatus.OK);
+		} else {
+			// get a copy of the existing transaction
+			existingTransaction = storeService.findTransactionById(retVal);
+
+			// set new coupon values
+			existingTransaction.setCoupons(null);
+
+			// update the existing transaction
+			returnInt = storeService.saveTransaction(existingTransaction);
+
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@DeleteMapping("/shop/transactions/open/userid/{userId}/sku/{sku}")
+	public ResponseEntity<String> removeFromOpenTransactionByUserId(@PathVariable Long userId, @PathVariable Long sku) {
+
+		Transaction transaction = null;
+		int idxOfSku = -1;
+
+		// get any open transaction by userId passed as PathVariable
+		Long retVal = storeService.openTransactionsExist(userId);
+
+		// if no open transaction for userId was found, return 404
+		// otherwise, delete the item with sku from the transaction
+		if (retVal == -1) {
+			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+		} else {
+			// get a copy of the transaction
+			transaction = storeService.findTransactionById(retVal);
+
+			// find the location in transaction's inventory list of matching sku
+			for (idxOfSku = 0; idxOfSku < transaction.getInventory().size(); idxOfSku++) {
+				if (sku == transaction.getInventory().get(idxOfSku).getSku()) {
+					break;
+				}
+			}
+
+			// remove the item with matching sku from inventory and update the transaction
+			transaction.getInventory().remove(idxOfSku);
+			storeService.saveTransaction(transaction);
+
+			return new ResponseEntity<String>("", HttpStatus.OK);
+		}
+
+	}
+
+	@PutMapping("/shop/transactions")
+	public ResponseEntity<String> updateTransaction(@RequestBody Transaction t) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+
+		// update a transaction
+		returnInt = storeService.saveTransaction(t);
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("/shop/transactions")
+	public ResponseEntity<String> createShopTransaction(@RequestBody Transaction t) {
+
+		Transaction existingTransaction = null;
+		List<Inventory> existingInventory = null;
+		Integer returnInt = -1; // for determining HttpStatus
+
+		Long retVal = storeService.openTransactionsExist(t.getUserId());
+
+		// no open transaction exists, create a new one
+		if (retVal == -1) {
+			returnInt = storeService.saveTransaction(t);
+		}
+
+		// an open transaction exists, update transaction
+		else {
+			// get a copy of the existing transaction
+			existingTransaction = storeService.findTransactionById(retVal);
+
+			// combine the new item in the transaction to the items from the existing
+			// transaction
+			existingInventory = existingTransaction.getInventory();
+			existingInventory.addAll(t.getInventory());
+
+			// set new transaction values
+			t.setTransactionId(retVal);
+			t.setInventory(existingInventory);
+
+			// update the existing transaction
+			returnInt = storeService.saveTransaction(t);
+		}
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@DeleteMapping("/shop/transactions/{id}")
+	public ResponseEntity<String> deleteTransaction(@PathVariable Long id) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+
+		Transaction t = new Transaction();
+		t.setTransactionId(id);
+
+		// update a transaction
+		returnInt = storeService.saveTransaction(t);
+
+		// indicate success or failure
+		if (returnInt == 0) {
+			return new ResponseEntity<String>("", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping("/shop/checkout")
+	public ResponseEntity<Integer> updateTransactionCost(@RequestBody Map<String, Object> values) {
+
+		Integer retVal = storeService.updateTransactionCost(values);
+		
+		// indicate success or failure
+		if (retVal == 0) {
+			return new ResponseEntity<Integer>(retVal, HttpStatus.OK);
+		} else if (retVal == 1) {
+			return ResponseEntity.notFound().build();
+		}
+		else {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	// Creates a new stripe payment intent and returns the client_secret to complete
+	// the transaction
+	@PostMapping("/shop/checkout")
+	public ResponseEntity<Map<String, String>> createPaymentIntent(@RequestBody Transaction t) {
+		Map<String, String> retVal = null;
+
+		retVal = storeService.createPaymentIntent(t);
+
+		// indicate success or failure
+		if (retVal != null) {
+			return new ResponseEntity<Map<String, String>>(retVal, HttpStatus.OK);
+		} else {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	//
+	//
+	//  ACCOUNT Path
+	//
+	//
+	
+	@GetMapping("/account/users/{userId}/transactions")
+	public ResponseEntity<List<Transaction>> findTransactionsByUserId(@PathVariable long userId) {
+		// read all stores
+		List<Transaction> transactions = storeService.findTransactionsByUserId(userId);
+		// a successful request should produce a list not null with a size greater than
+		// zero
+		if (transactions != null && transactions.size() > 0) {
+			return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
+		} else {
+			// author id not found, return 404 status
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@PutMapping("/account/users/{userId}/transactions")
+	public ResponseEntity<String> createTransaction(@RequestBody Transaction transaction) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+
+		// create new a transaction
+		returnInt = storeService.saveTransaction(transaction);
+
+		// indicate success or failure
+		if (returnInt == 1) {
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/account/users/{userId}/transactions")
+	public ResponseEntity<String> updateTransaction(@RequestBody Transaction transaction, @PathVariable long userId) {
+
+		Integer returnInt = -1; // for determining HttpStatus
+
+		// update a transaction
+		transaction.setTransactionId(userId);
+		returnInt = storeService.saveTransaction(transaction);
+
+		// indicate success or failure
+		if (returnInt == 1) {
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
 	//might removes not in swagger urls
 	@GetMapping("/account/users/{userId}")
 	public ResponseEntity<List<User>> getUserByUserId(@PathVariable Long userId) {
@@ -253,7 +514,6 @@ public class StoreController {
 		}
 	}
 	
-
 	@PutMapping("/new/account")
 	public ResponseEntity<String> createUser(@RequestBody User user) {
 		
