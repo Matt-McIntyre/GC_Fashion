@@ -38,6 +38,14 @@ public class StoreController {
 	//
 	//
 	
+	
+	@GetMapping("/shop/refund")
+	public void refund() {
+		
+		System.out.println("Calling refund method...");
+	}
+	
+	
 	@GetMapping("/shop/products")
 	public ResponseEntity<List<Product>> getAllProduct() {
 		
