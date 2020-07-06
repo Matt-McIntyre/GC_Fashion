@@ -380,7 +380,8 @@ public class StoreController {
 		if (returnInt == 0) {
 			return new ResponseEntity<String>("", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+			// SKU already exists in cart.  Ignore this error, so return OK
+			return new ResponseEntity<String>("", HttpStatus.OK);
 		}
 	}
 
