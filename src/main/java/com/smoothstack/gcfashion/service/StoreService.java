@@ -94,14 +94,16 @@ public class StoreService {
 
 			try {
 				tDAO.deleteById(transactionId);
-				return 1;
 			} catch (Exception e) {
 				// query error
-				return 0;
+				return -1;
 			}
 		} else {
-			return 0;
+			// not found
+			return 1;
 		}
+		// success
+		return 0;
 	}
 
 	/**
@@ -191,11 +193,11 @@ public class StoreService {
 	public Coupon getCoupon(long transactionId) {
 		Transaction transaction = this.findTransactionById(transactionId);
 
-		if (transaction.getCoupons().size() > 0) {
+		if (transaction != null && transaction.getCoupons() != null && transaction.getCoupons().size() > 0) {
 			return transaction.getCoupons().get(0);
+		} else {
+			return null;
 		}
-
-		return null;
 	}
 
 	public Long openTransactionsExist(long userId) {
@@ -217,6 +219,11 @@ public class StoreService {
 		List<Product> newList = null;
 		List<Inventory> invList = null;
 		Product product = null;
+
+		// invalid transaction id
+		if (transaction == null) {
+			return null;
+		}
 
 		// for each inventory item in the open transaction, get its product info and
 		// set the products inventory list to the inventory item
@@ -303,6 +310,12 @@ public class StoreService {
 
 	public Integer updateTransactionCost(Map<String, Object> values) {
 
+		// error if not all expected values are provided argument
+		if (values == null || values.get("userId") == null || values.get("tax") == null
+				|| values.get("total") == null) {
+			return -2;
+		}
+
 		Long userId = ((Number) values.get("userId")).longValue();
 		Double tax = (Double) values.get("tax");
 		Double total = (Double) values.get("total");
@@ -319,13 +332,20 @@ public class StoreService {
 				// query error
 				return -1;
 			}
+			// success
 			return 0;
 		} else {
+			// no transaction to update
 			return 1;
 		}
 	}
 
 	public Map<String, String> createPaymentIntent(Transaction t) {
+
+		// return null if transaction invalid
+		if (t == null || t.getTotal() == null) {
+			return null;
+		}
 
 		// set stripe secret key
 		Stripe.apiKey = STRIPE_SECRET;
