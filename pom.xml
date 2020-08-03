@@ -11,12 +11,13 @@
 	</parent>
 	<groupId>com.smoothstack</groupId>
 	<artifactId>gc-fashion</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>gc-fashion</name>
 	<description>Fashion Store project</description>
 
 	<properties>
 		<java.version>1.8</java.version>
+		<build.number></build.number>
 	</properties>
 
 	<dependencies>
@@ -87,6 +88,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>${artifactId}-${version}${build.number}</finalName>
 	</build>
 
 </project>
