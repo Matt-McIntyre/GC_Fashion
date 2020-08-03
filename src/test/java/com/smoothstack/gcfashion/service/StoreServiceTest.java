@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.smoothstack.gcfashion.dao.CategoryDAO;
 import com.smoothstack.gcfashion.dao.CouponDAO;
@@ -23,7 +22,6 @@ import com.smoothstack.gcfashion.dao.UserDAO;
 import com.smoothstack.gcfashion.entity.Transaction;
 import com.smoothstack.gcfashion.entity.User;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class StoreServiceTest {
 

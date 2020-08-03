@@ -7,16 +7,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.smoothstack.gcfashion.dao.ProductDAO;
 import com.smoothstack.gcfashion.dao.TransactionDAO;
 import com.smoothstack.gcfashion.dao.UserDAO;
 import com.smoothstack.gcfashion.entity.Transaction;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class Payment {
+public class PaymentTest {
 
 	@Mock
 	TransactionDAO tDAO;
